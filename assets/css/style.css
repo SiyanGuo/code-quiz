@@ -3,10 +3,8 @@ box-sizing: border-box;
 }
 
 body {
-    background-color:bisque;
     font-size: 1.5rem;
-    padding:0 3%;
-    margin:2%;
+    padding:3%;
 }
 
 header {
@@ -14,7 +12,40 @@ header {
     justify-content: space-between;
     margin-bottom:5%;
 }
-
 .intro{
     text-align: center;
+}
+.intro h1{
+    font-weight: 700;
+    line-height: 2;
+}
+
+main{
+    margin:auto;
+    width:65%;
+}
+.quiz{
+    margin-left: 50px;
+}
+.quiz .question{
+    font-size: 2.4rem;
+    margin: 32px;
+}
+
+.quiz .btn{
+    font-size: 1.6rem;
+    /* background-color:#0d6efd; */
+    color:white;
+    padding:8px 20px;
+    margin:10px 20px 0 0 ;
+    border-radius: 15px;
+    width: 50%;
+    list-style: none;
+    text-align: left;
+}
+
+.answer-border{
+    font-size: 3rem;
+    color:lightblue;
+border-top:lightblue solid 2px;
 }
