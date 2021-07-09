@@ -10,8 +10,12 @@ var timerEl = document.querySelector('.timer');
 var answerEl = document.querySelector('.answer');
 //main content
 var pageContentEl = document.querySelector('.page-content');
+var quizEl = document.querySelector('.quiz');
+var quizWrapperEl = document.querySelector('.quiz-wrapper');
+
 
 var questionId = 0;
+var startScore = 90;
 
 var quizArr = [
     {
@@ -57,21 +61,23 @@ var quizArr = [
 ];
 
 var startQuiz = function () {
+    //remove the introduction text
     introEl.remove();
 
-    showQuestion();
-
     //timer counting down - set interval 1s update <span>
-    var startScore = 90;
     var countingDown = setInterval(function () {
         if (startScore >= 0) {
             timerEl.textContent = startScore;
             startScore--;
         } else {
             clearInterval(countingDown);
-            //call result function
+            showResult();
+            answerEl.remove();
         }
     }, 1000)
+
+    //show the first question
+    showQuestion();
 }
 
 
@@ -82,25 +88,25 @@ var showQuestion = function () {
 
     //append option A - D
     var optionAEl = document.createElement('li');
-    optionAEl.className = "optionA btn btn-primary";
+    optionAEl.className = "option A btn btn-primary";
     optionAEl.setAttribute('id', questionId)
     optionAEl.textContent = quizArr[questionId].answerA;
     optionsEl.appendChild(optionAEl);
 
     var optionBEl = document.createElement('li');
-    optionBEl.className = "optionB btn btn-primary";
+    optionBEl.className = "option B btn btn-primary";
     optionBEl.setAttribute('id', questionId)
     optionBEl.textContent = quizArr[questionId].answerB;
     optionsEl.appendChild(optionBEl);
 
     var optionCEl = document.createElement('li');
-    optionCEl.className = "optionC btn btn-primary";
+    optionCEl.className = "option C btn btn-primary";
     optionCEl.setAttribute('id', questionId)
     optionCEl.textContent = quizArr[questionId].answerC;
     optionsEl.appendChild(optionCEl);
 
     var optionDEl = document.createElement('li');
-    optionDEl.className = "optionD btn btn-primary";
+    optionDEl.className = "option D btn btn-primary";
     optionDEl.setAttribute('id', questionId)
     optionDEl.textContent = quizArr[questionId].answerD;
     optionsEl.appendChild(optionDEl);
@@ -110,47 +116,93 @@ var showQuestion = function () {
 
 var checkOptionHandler = function (event) {
 
-    var selectedId = event.target.getAttribute('id');
+    var selectedId = JSON.parse(event.target.getAttribute('id'));
     var selectedAnswer = event.target.textContent;
 
     if (selectedAnswer === quizArr[selectedId].rightAnswer) {
         console.log('answer is correct');
         //change question
-        updateQuestion();
+        updateQuestion(selectedId);
         //show answer
         answerEl.className = 'answer-border';
         answerEl.textContent = "Correct!"
     } else {
         console.log('answer is wrong');
         //change question
-        updateQuestion();
+        updateQuestion(selectedId);
         //show answer
         answerEl.className = 'answer-border';
         answerEl.textContent = "Wrong!"
         // deduct time/score
-        timerEl.textContent = startScore - 10;
+        console.log(timerEl.textContent);
+        startScore = timerEl.textContent - 10;
     }
 }
 
-var updateQuestion = function () {
+var updateQuestion = function (selectedId) {
+    console.log(selectedId);
+    console.log(quizArr.length-1);
+
+    
+    //when it's the last question in an array, show result ????????????????
+    if (selectedId === quizArr.length-1) {
+        console.log('comethrough');
+        startScore = -1;
+        // clearInterval(countingDown);
+        showResult();
+        return false;
+    }
+
     //update question
     questionEl.textContent = quizArr[questionId].question;
     //update option A - D
-    var optionAEl = document.querySelector('li.optionA')
+    var optionAEl = document.querySelector('li.A')
     optionAEl.setAttribute('id', questionId)
     optionAEl.textContent = quizArr[questionId].answerA;
-    var optionBEl = document.querySelector('li.optionB')
+    var optionBEl = document.querySelector('li.B')
     optionBEl.setAttribute('id', questionId)
     optionBEl.textContent = quizArr[questionId].answerB;
-    var optionCEl = document.querySelector('li.optionC')
+    var optionCEl = document.querySelector('li.C')
     optionCEl.setAttribute('id', questionId)
     optionCEl.textContent = quizArr[questionId].answerC;
-    var optionDEl = document.querySelector('li.optionD')
+    var optionDEl = document.querySelector('li.D')
     optionDEl.setAttribute('id', questionId)
     optionDEl.textContent = quizArr[questionId].answerD;
 
     questionId++
 }
+
+var showResult = function(){
+    //remove the introduction text
+    quizWrapperEl.remove();
+
+    var resultEl = document.createElement('div');
+    resultEl.className = 'result';
+
+    var resultHeadingEl = document.createElement('h2');
+    resultHeadingEl.textContent = 'All done!'
+    resultEl.appendChild(resultHeadingEl);
+    var resultTextEl = document.createElement('p');
+    resultTextEl.textContent = 'Your final score is ' + timerEl.textContent +' .';
+    resultEl.appendChild(resultTextEl);
+
+    // var initialEl = document.createElement('div')
+    var initialLabelEl = document.createElement('label')
+    initialLabelEl.textContent = 'Enter initials:'
+    resultEl.appendChild(initialLabelEl);
+
+    var initialInputEl = document.createElement('input');
+    resultEl.appendChild(initialInputEl);
+
+    var initiualSubmitEL = document.createElement('button');
+    initiualSubmitEL.className = "btn btn-primary btn-lg";
+    initiualSubmitEL.textContent = 'Submit';
+    resultEl.appendChild(initiualSubmitEL);
+
+    quizEl.prepend(resultEl);
+
+}
+
 
 
 startBtnEl.addEventListener('click', startQuiz);
