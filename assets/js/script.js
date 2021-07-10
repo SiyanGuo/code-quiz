@@ -8,12 +8,11 @@ var optionsEl = document.querySelector('.options')
 var timerEl = document.querySelector('.timer');
 //show answer
 var answerEl = document.querySelector('.answer');
-//main content
-var pageContentEl = document.querySelector('.page-content');
+
 var quizEl = document.querySelector('.quiz');
 var quizWrapperEl = document.querySelector('.quiz-wrapper');
 
-// var initialsFormEl = document.querySelector('.initials-form');
+var initialsFormEl = document.querySelector('.initials-form');
 
 var questionId = 0;
 var startScore = 90;
@@ -69,7 +68,7 @@ var startQuiz = function () {
 
     //timer counting down - set interval 1s update <span>
     var countingDown = setInterval(function () {
-        if (startScore > 1) {
+        if (startScore >= 1) {
             startScore--;
             timerEl.textContent = startScore;
         } else {
@@ -124,22 +123,23 @@ var checkOptionHandler = function (event) {
 
     if (selectedAnswer === quizArr[selectedId].rightAnswer) {
         console.log('answer is correct');
-        //change question
-        updateQuestion(selectedId);
+
         //show answer
         answerEl.className = 'answer-border';
-        answerEl.textContent = "Correct!"
+        answerEl.textContent = "Correct!";
+        //change question
+        updateQuestion(selectedId);
     } else {
         console.log('answer is wrong');
         wrongAnswer = true;
-        //change question
-        updateQuestion(selectedId);
         //show answer
         answerEl.className = 'answer-border';
         answerEl.textContent = "Wrong!"
         // deduct time/score
         console.log(timerEl.textContent);
         startScore = timerEl.textContent - 10;
+        //change question
+        updateQuestion(selectedId);
     }
 }
 
@@ -150,7 +150,7 @@ var updateQuestion = function (selectedId) {
     //when it's the last question in an array, show result
     if (selectedId === quizArr.length - 1) {
         console.log('comethrough');
-        startScore = 1;
+        startScore = 0;
         return false;
     }
 
@@ -174,9 +174,7 @@ var updateQuestion = function (selectedId) {
 }
 
 
-
 var showResult = function () {
-
 
     //remove the introduction text
     quizWrapperEl.remove();
@@ -188,40 +186,52 @@ var showResult = function () {
     resultHeadingEl.textContent = 'All done!'
     resultEl.appendChild(resultHeadingEl);
 
+    // check if all answers are correct
     var resultTextEl = document.createElement('p');
     if (!wrongAnswer) {
-        resultTextEl.textContent = 'Your final score is ' + timerEl.textContent + ' .';
+        resultTextEl.innerHTML = 'Your final score is <span class="finalScore">'+ timerEl.textContent +'</span>.';
     } else {
-        resultTextEl.textContent = 'Your final score is 0.';
+        resultTextEl.innerHTML = 'Your final score is <span class="finalScore"> 0 </span>.';
     }
-
     resultEl.appendChild(resultTextEl);
+
+    quizEl.prepend(resultEl);
 
     // var initialsFormEl = document.createElement('form')
     var initialLabelEl = document.createElement('label')
     initialLabelEl.textContent = 'Enter initials:'
-    resultEl.appendChild(initialLabelEl);
+    initialsFormEl.appendChild(initialLabelEl);
 
     var initialInputEl = document.createElement('input');
-    resultEl.appendChild(initialInputEl);
+    initialsFormEl.appendChild(initialInputEl);
 
     var initiualSubmitEL = document.createElement('button');
     initiualSubmitEL.className = "btn btn-primary btn-lg";
     initiualSubmitEL.type = 'submit'
     initiualSubmitEL.textContent = 'Submit';
-    resultEl.appendChild(initiualSubmitEL);
-
-    // resultEl.appendChild(initialsFormEl);
-    quizEl.appendChild(resultEl);
-
-
+    initialsFormEl.appendChild(initiualSubmitEL);
 
 }
 
 
 var saveScore = function (event) {
-    console.log(event.target);
-    // localStorage.setItem('initials', )
+    event.preventDefault();
+    console.log(event);
+    var playerInitials = document.querySelector('input').value;
+    var score = document.querySelector('.finalScore').textContent;
+ 
+    localStorage.setItem('initials',playerInitials);
+    localStorage.setItem('score',score);
+
+    viewScores();
+
+}
+
+var viewScores = function (){
+
+    quizEl.remove();
+    
+
 
 }
 
@@ -229,4 +239,4 @@ startBtnEl.addEventListener('click', startQuiz);
 
 optionsEl.addEventListener('click', checkOptionHandler);
 
-// initialsFormEl.addEventListener('submit', saveScore)
+initialsFormEl.addEventListener('submit', saveScore)

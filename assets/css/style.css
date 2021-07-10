@@ -55,7 +55,7 @@ main{
     margin:30px 132px 0;
 }
 
-.result {
+.result, .initials-form {
     font-size:1.6rem;
     margin:30px 30px 30px 100px;
 }
@@ -63,7 +63,7 @@ main{
     font-size: 3rem;
 }
 
-.result label, .result input, .result button{
+.initials-form label, .initials-form input, .initials-form button{
     margin-right: 10px;
     vertical-align:middle;
 }
