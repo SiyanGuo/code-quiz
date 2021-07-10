@@ -4,7 +4,7 @@ var startBtnEl = document.querySelector('.start-button');
 var questionEl = document.querySelector('.question');
 //question options
 var optionsEl = document.querySelector('.options')
-//time/score 
+//time/score
 var timerEl = document.querySelector('.timer');
 //show answer
 var answerEl = document.querySelector('.answer');
@@ -13,9 +13,11 @@ var pageContentEl = document.querySelector('.page-content');
 var quizEl = document.querySelector('.quiz');
 var quizWrapperEl = document.querySelector('.quiz-wrapper');
 
+// var initialsFormEl = document.querySelector('.initials-form');
 
 var questionId = 0;
 var startScore = 90;
+var wrongAnswer = false;
 
 var quizArr = [
     {
@@ -63,12 +65,13 @@ var quizArr = [
 var startQuiz = function () {
     //remove the introduction text
     introEl.remove();
+    timerEl.textContent = startScore;
 
     //timer counting down - set interval 1s update <span>
     var countingDown = setInterval(function () {
-        if (startScore >= 0) {
-            timerEl.textContent = startScore;
+        if (startScore > 1) {
             startScore--;
+            timerEl.textContent = startScore;
         } else {
             clearInterval(countingDown);
             showResult();
@@ -128,6 +131,7 @@ var checkOptionHandler = function (event) {
         answerEl.textContent = "Correct!"
     } else {
         console.log('answer is wrong');
+        wrongAnswer = true;
         //change question
         updateQuestion(selectedId);
         //show answer
@@ -141,15 +145,12 @@ var checkOptionHandler = function (event) {
 
 var updateQuestion = function (selectedId) {
     console.log(selectedId);
-    console.log(quizArr.length-1);
+    console.log(quizArr.length - 1);
 
-    
-    //when it's the last question in an array, show result ????????????????
-    if (selectedId === quizArr.length-1) {
+    //when it's the last question in an array, show result
+    if (selectedId === quizArr.length - 1) {
         console.log('comethrough');
-        startScore = -1;
-        // clearInterval(countingDown);
-        showResult();
+        startScore = 1;
         return false;
     }
 
@@ -172,21 +173,31 @@ var updateQuestion = function (selectedId) {
     questionId++
 }
 
-var showResult = function(){
+
+
+var showResult = function () {
+
+
     //remove the introduction text
     quizWrapperEl.remove();
 
     var resultEl = document.createElement('div');
-    resultEl.className = 'result';
+    resultEl.className = "result";
 
     var resultHeadingEl = document.createElement('h2');
     resultHeadingEl.textContent = 'All done!'
     resultEl.appendChild(resultHeadingEl);
+
     var resultTextEl = document.createElement('p');
-    resultTextEl.textContent = 'Your final score is ' + timerEl.textContent +' .';
+    if (!wrongAnswer) {
+        resultTextEl.textContent = 'Your final score is ' + timerEl.textContent + ' .';
+    } else {
+        resultTextEl.textContent = 'Your final score is 0.';
+    }
+
     resultEl.appendChild(resultTextEl);
 
-    // var initialEl = document.createElement('div')
+    // var initialsFormEl = document.createElement('form')
     var initialLabelEl = document.createElement('label')
     initialLabelEl.textContent = 'Enter initials:'
     resultEl.appendChild(initialLabelEl);
@@ -196,15 +207,26 @@ var showResult = function(){
 
     var initiualSubmitEL = document.createElement('button');
     initiualSubmitEL.className = "btn btn-primary btn-lg";
+    initiualSubmitEL.type = 'submit'
     initiualSubmitEL.textContent = 'Submit';
     resultEl.appendChild(initiualSubmitEL);
 
-    quizEl.prepend(resultEl);
+    // resultEl.appendChild(initialsFormEl);
+    quizEl.appendChild(resultEl);
+
+
 
 }
 
 
+var saveScore = function (event) {
+    console.log(event.target);
+    // localStorage.setItem('initials', )
+
+}
 
 startBtnEl.addEventListener('click', startQuiz);
 
 optionsEl.addEventListener('click', checkOptionHandler);
+
+// initialsFormEl.addEventListener('submit', saveScore)
