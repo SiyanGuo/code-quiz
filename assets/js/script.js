@@ -1,3 +1,6 @@
+//header
+var headerEl = document.querySelector('header');
+// intro to quiz
 var introEl = document.querySelector('.intro');
 var startBtnEl = document.querySelector('.start-button');
 //question title
@@ -8,15 +11,20 @@ var optionsEl = document.querySelector('.options')
 var timerEl = document.querySelector('.timer');
 //show answer
 var answerEl = document.querySelector('.answer');
-
+//show result
 var quizEl = document.querySelector('.quiz');
 var quizWrapperEl = document.querySelector('.quiz-wrapper');
-
 var initialsFormEl = document.querySelector('.initials-form');
+//show score
+var viewScoreEl = document.querySelector('view-score');
+var scoreTitleEl = document.querySelector('score-title');
+var scoreListEl = document.querySelector('score-list');
 
 var questionId = 0;
 var startScore = 90;
 var wrongAnswer = false;
+
+var players = [];
 
 var quizArr = [
     {
@@ -81,7 +89,6 @@ var startQuiz = function () {
     //show the first question
     showQuestion();
 }
-
 
 var showQuestion = function () {
 
@@ -173,7 +180,6 @@ var updateQuestion = function (selectedId) {
     questionId++
 }
 
-
 var showResult = function () {
 
     //remove the introduction text
@@ -189,7 +195,7 @@ var showResult = function () {
     // check if all answers are correct
     var resultTextEl = document.createElement('p');
     if (!wrongAnswer) {
-        resultTextEl.innerHTML = 'Your final score is <span class="finalScore">'+ timerEl.textContent +'</span>.';
+        resultTextEl.innerHTML = 'Your final score is <span class="finalScore">' + timerEl.textContent + '</span>.';
     } else {
         resultTextEl.innerHTML = 'Your final score is <span class="finalScore"> 0 </span>.';
     }
@@ -213,25 +219,38 @@ var showResult = function () {
 
 }
 
-
 var saveScore = function (event) {
     event.preventDefault();
-    console.log(event);
+
     var playerInitials = document.querySelector('input').value;
-    var score = document.querySelector('.finalScore').textContent;
- 
-    localStorage.setItem('initials',playerInitials);
-    localStorage.setItem('score',score);
-
+    console.log(playerInitials);
+    if (playerInitials) {
+        var playerScore = document.querySelector('.finalScore').textContent;
+        player = {
+            initials: playerInitials,
+            score: playerScore
+        }
+        players.push(player);
+        localStorage.setItem('players', JSON.stringify(players));
+    }
+    // localStorage.setItem('initials',playerInitials);
+    // localStorage.setItem('score',playerScore);
     viewScores();
-
 }
 
-var viewScores = function (){
-
+var viewScores = function () {
+    var savedPlayers = localStorage.getItem('players');
+    savedPlayers = JSON.parse(savedPlayers);
+    console.log(savedPlayers);
     quizEl.remove();
-    
+    headerEl.remove();
+    scoreTitleEl.textContent = 'High Scores';
 
+    // var scoreEl = document.createElement('li');
+    // optionBEl.className = "option B btn btn-primary";
+    // optionBEl.setAttribute('id', questionId)
+    // optionBEl.textContent = quizArr[questionId].answerB;
+    // optionsEl.appendChild(optionBEl);
 
 }
 
