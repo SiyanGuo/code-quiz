@@ -16,14 +16,17 @@ var quizEl = document.querySelector('.quiz');
 var quizWrapperEl = document.querySelector('.quiz-wrapper');
 var initialsFormEl = document.querySelector('.initials-form');
 //show score
-var viewScoreEl = document.querySelector('view-score');
-var scoreTitleEl = document.querySelector('score-title');
-var scoreListEl = document.querySelector('score-list');
+var viewScoreEl = document.querySelector('.view-score');
+var scoreTitleEl = document.querySelector('.score-title');
+var scoreListEl = document.querySelector('.score-list');
+//view high scores
+var viewHighScoresEl = document.querySelector('.high-scores');
 
 var questionId = 0;
 var startScore = 90;
 var wrongAnswer = false;
 
+// get items from localStorage
 var players = [];
 
 var quizArr = [
@@ -85,7 +88,6 @@ var startQuiz = function () {
             answerEl.remove();
         }
     }, 1000)
-
     //show the first question
     showQuestion();
 }
@@ -223,6 +225,7 @@ var saveScore = function (event) {
     event.preventDefault();
 
     var playerInitials = document.querySelector('input').value;
+
     console.log(playerInitials);
     if (playerInitials) {
         var playerScore = document.querySelector('.finalScore').textContent;
@@ -233,29 +236,67 @@ var saveScore = function (event) {
         players.push(player);
         localStorage.setItem('players', JSON.stringify(players));
     }
-    // localStorage.setItem('initials',playerInitials);
-    // localStorage.setItem('score',playerScore);
     viewScores();
 }
 
 var viewScores = function () {
     var savedPlayers = localStorage.getItem('players');
     savedPlayers = JSON.parse(savedPlayers);
-    console.log(savedPlayers);
+    introEl.remove();
     quizEl.remove();
     headerEl.remove();
     scoreTitleEl.textContent = 'High Scores';
+    console.log(savedPlayers);
 
-    // var scoreEl = document.createElement('li');
-    // optionBEl.className = "option B btn btn-primary";
-    // optionBEl.setAttribute('id', questionId)
-    // optionBEl.textContent = quizArr[questionId].answerB;
-    // optionsEl.appendChild(optionBEl);
+    for(var i = 0; i<savedPlayers.length; i++){
+        var scoreEl = document.createElement('li');
+        scoreEl.className = "initials-score";
+        scoreEl.textContent = i+1 + ". " +savedPlayers[i].initials+ " - " + savedPlayers[i].score;
+        scoreListEl.appendChild(scoreEl);
+    }
+    var goBackEl = document.createElement('button');
+    goBackEl.className = "btn btn-dark go-back-btn";
+    goBackEl.textContent = "Go Back";
+    goBackEl.type = "button";
+    goBackEl.addEventListener("click", goBack)
+    viewScoreEl.appendChild(goBackEl);
 
+    var clearEl = document.createElement('button');
+    clearEl.className = "btn btn-dark";
+    clearEl.textContent = "Clear High Scores";
+    clearEl.type = "button";
+    clearEl.addEventListener("click", clearScores)
+    viewScoreEl.appendChild(clearEl);
 }
+//reload the page
+var goBack = function(){
+    location.reload();
+}
+//clear players in the localStorage and the array, remove score list
+var clearScores = function(){
+    localStorage.clear();
+    players=[];
+    console.log(players);
+    scoreListEl.remove();
+}
+
+//retrieve stored players 
+var loadScores = function () {
+    var savedPlayers = localStorage.getItem('players');
+    savedPlayers = JSON.parse(savedPlayers);
+    if (savedPlayers) {
+        players = savedPlayers;
+    } 
+    console.log(players);
+}
+
+
+loadScores();
 
 startBtnEl.addEventListener('click', startQuiz);
 
 optionsEl.addEventListener('click', checkOptionHandler);
 
-initialsFormEl.addEventListener('submit', saveScore)
+initialsFormEl.addEventListener('submit', saveScore);
+
+viewHighScoresEl.addEventListener('click', viewScores);
