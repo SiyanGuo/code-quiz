@@ -21,6 +21,7 @@ var scoreTitleEl = document.querySelector('.score-title');
 var scoreListEl = document.querySelector('.score-list');
 //view high scores
 var viewHighScoresEl = document.querySelector('.high-scores');
+var buttonsEl = document.querySelector('.buttons');
 
 var questionId = 0;
 var startScore = 90;
@@ -135,7 +136,7 @@ var checkOptionHandler = function (event) {
 
         //show answer
         answerEl.className = 'answer-border';
-        answerEl.textContent = "Correct!";
+        answerEl.textContent = "👍 Correct!";
         //change question
         updateQuestion(selectedId);
     } else {
@@ -143,7 +144,7 @@ var checkOptionHandler = function (event) {
         wrongAnswer = true;
         //show answer
         answerEl.className = 'answer-border';
-        answerEl.textContent = "Wrong!"
+        answerEl.textContent = "🙁 Wrong!"
         // deduct time/score
         console.log(timerEl.textContent);
         startScore = timerEl.textContent - 10;
@@ -248,25 +249,27 @@ var viewScores = function () {
     scoreTitleEl.textContent = 'High Scores';
     console.log(savedPlayers);
 
-    for(var i = 0; i<savedPlayers.length; i++){
-        var scoreEl = document.createElement('li');
-        scoreEl.className = "initials-score";
-        scoreEl.textContent = i+1 + ". " +savedPlayers[i].initials+ " - " + savedPlayers[i].score;
-        scoreListEl.appendChild(scoreEl);
-    }
     var goBackEl = document.createElement('button');
     goBackEl.className = "btn btn-dark go-back-btn";
     goBackEl.textContent = "Go Back";
     goBackEl.type = "button";
     goBackEl.addEventListener("click", goBack)
-    viewScoreEl.appendChild(goBackEl);
+    buttonsEl.appendChild(goBackEl);
 
     var clearEl = document.createElement('button');
     clearEl.className = "btn btn-dark";
     clearEl.textContent = "Clear High Scores";
     clearEl.type = "button";
     clearEl.addEventListener("click", clearScores)
-    viewScoreEl.appendChild(clearEl);
+    buttonsEl.appendChild(clearEl);
+    
+    for(var i = 0; i<savedPlayers.length; i++){
+        var scoreEl = document.createElement('li');
+        scoreEl.className = "initials-score";
+        scoreEl.textContent = i+1 + ". " +savedPlayers[i].initials+ " - " + savedPlayers[i].score;
+        scoreListEl.appendChild(scoreEl);
+    }
+
 }
 //reload the page
 var goBack = function(){
