@@ -266,7 +266,7 @@ var viewScores = function () {
     for(var i = 0; i<savedPlayers.length; i++){
         var scoreEl = document.createElement('li');
         scoreEl.className = "initials-score";
-        scoreEl.textContent = i+1 + ". " +savedPlayers[i].initials+ " - " + savedPlayers[i].score;
+        scoreEl.textContent = `${i+1}. ${savedPlayers[i].initials}  -  ${savedPlayers[i].score}`;
         scoreListEl.appendChild(scoreEl);
     }
 
@@ -278,6 +278,7 @@ var goBack = function(){
 //clear players in the localStorage and the array, remove score list
 var clearScores = function(){
     localStorage.clear();
+    // localStorage.setItem('players', '');
     players=[];
     console.log(players);
     scoreListEl.remove();
