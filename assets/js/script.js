@@ -25,7 +25,6 @@ var buttonsEl = document.querySelector('.buttons');
 
 var questionId = 0;
 var startScore = 90;
-var wrongAnswer = false;
 
 // get items from localStorage
 var players = [];
@@ -141,7 +140,6 @@ var checkOptionHandler = function (event) {
         updateQuestion(selectedId);
     } else {
         console.log('answer is wrong');
-        wrongAnswer = true;
         //show answer
         answerEl.className = 'answer-border';
         answerEl.textContent = "🙁 Wrong!"
@@ -192,23 +190,18 @@ var showResult = function () {
     resultEl.className = "result";
 
     var resultHeadingEl = document.createElement('h2');
-    resultHeadingEl.textContent = 'All done!'
+    resultHeadingEl.textContent = 'All done!';
     resultEl.appendChild(resultHeadingEl);
 
     // check if all answers are correct
     var resultTextEl = document.createElement('p');
-    if (!wrongAnswer) {
-        resultTextEl.innerHTML = 'Your final score is <span class="finalScore">' + timerEl.textContent + '</span>.';
-    } else {
-        resultTextEl.innerHTML = 'Your final score is <span class="finalScore"> 0 </span>.';
-    }
+    resultTextEl.innerHTML = 'Your final score is <span class="finalScore">' + timerEl.textContent + '</span>.';
     resultEl.appendChild(resultTextEl);
-
     quizEl.prepend(resultEl);
 
     // var initialsFormEl = document.createElement('form')
-    var initialLabelEl = document.createElement('label')
-    initialLabelEl.textContent = 'Enter initials:'
+    var initialLabelEl = document.createElement('label');
+    initialLabelEl.textContent = 'Enter initials:';
     initialsFormEl.appendChild(initialLabelEl);
 
     var initialInputEl = document.createElement('input');
@@ -216,7 +209,7 @@ var showResult = function () {
 
     var initiualSubmitEL = document.createElement('button');
     initiualSubmitEL.className = "btn btn-primary btn-lg";
-    initiualSubmitEL.type = 'submit'
+    initiualSubmitEL.type = 'submit';
     initiualSubmitEL.textContent = 'Submit';
     initialsFormEl.appendChild(initiualSubmitEL);
 
@@ -262,25 +255,25 @@ var viewScores = function () {
     clearEl.type = "button";
     clearEl.addEventListener("click", clearScores)
     buttonsEl.appendChild(clearEl);
-    
-    if(savedPlayers){
-        for(var i = 0; i<savedPlayers.length; i++){
+
+    if (savedPlayers) {
+        for (var i = 0; i < savedPlayers.length; i++) {
             var scoreEl = document.createElement('li');
             scoreEl.className = "initials-score";
-            scoreEl.textContent = `${i+1}. ${savedPlayers[i].initials}  -  ${savedPlayers[i].score}`;
+            scoreEl.textContent = `${i + 1}. ${savedPlayers[i].initials}  -  ${savedPlayers[i].score}`;
             scoreListEl.appendChild(scoreEl);
         }
     }
 
 }
 //reload the page
-var goBack = function(){
+var goBack = function () {
     location.reload();
 }
 //clear players in the localStorage and the array, remove score list
-var clearScores = function(){
+var clearScores = function () {
     localStorage.removeItem('players');
-    players=[];
+    players = [];
     console.log(players);
     scoreListEl.remove();
 }
@@ -291,7 +284,7 @@ var loadScores = function () {
     savedPlayers = JSON.parse(savedPlayers);
     if (savedPlayers) {
         players = savedPlayers;
-    } 
+    }
     console.log(players);
 }
 
